@@ -141,26 +141,7 @@ public class Model {
 		int numberOfIteration = 0;
 		functionZ.replaceAll(z -> z * -1);
 		new InterfazUsuarioMostrarTablaSimple().MostrarDatos(this, numberOfIteration++);
-		
-//		int varIn = functionZ.indexOf(Collections.min(functionZ));
-		
-//		int varIn = getVarIn(functionZ);
-//		System.out.println("------------ " + varIn);
-//		int varOut = getVarOut(varIn);
-//		
-//		while(functionZ.get(varIn) < 0) { // Iteration
-//
-//			System.out.print("Variable de Entrada : X"+(varIn+1)+"   -    Variable de Salida : X"+(listVarBasic.get(varOut)));
-//			operacionDeRenglonGaussJordan(varIn,varOut);
-//			listVarBasic.set(varOut, varIn+1);
-//			new InterfazUsuarioMostrarTablaSimple().MostrarDatos(this, numberOfIteration++);
-//			
-//			varIn = getVarIn(functionZ);
-//			System.out.print("-------- : "+varIn);
-//			varOut = getVarOut(varIn);
-//		}
-		
-		
+				
 		int varIn = 0;
 		int varOut = 0;
 		
@@ -169,9 +150,11 @@ public class Model {
 			varIn = getVarIn(functionZ);
 			System.out.print("-------- : "+varIn+"\n");
 			
-			if ( varIn < 0) break; //condicion de parada del Método Simplex
+			if ( varIn < 0) { break;} //condicion de parada del Mï¿½todo Simplex
 			
 			varOut = getVarOut(varIn);
+			System.out.println("este valor es :: "+varOut);
+			if( varOut < 0) break;
 			
 			System.out.print("Variable de Entrada : X"+(varIn+1)+"   -    Variable de Salida : X"+(listVarBasic.get(varOut)));
 			operacionDeRenglonGaussJordan(varIn,varOut);
@@ -182,7 +165,7 @@ public class Model {
 		
 		
 		ArrayList<Double> result = new ArrayList<Double>();
-		result.add(solucion);
+		result.add(getSolucion());
 		
 		for(int i=0; i<countVar;i++) {
 			result.add(0.0);
@@ -245,7 +228,7 @@ public class Model {
 	private int getVarOut(final int varIn) {//prueba de optimalidad
 	
 		if(listX.stream().allMatch(x -> x.get(varIn) < 0)) {
-			System.out.println("La solución no esta Acotada, columna de la variable X" + (varIn+1) + " son todas negativas -> no hay variable de salida");
+			System.out.println("La soluciï¿½n no esta Acotada, columna de la variable X" + (varIn+1) + " son todas negativas -> no hay variable de salida");
 		}		
 					
 		return IntStream.rangeClosed(0, countEcu-1)

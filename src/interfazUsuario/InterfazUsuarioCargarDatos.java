@@ -35,7 +35,8 @@ final public class InterfazUsuarioCargarDatos {
 //		ingresarModeloPorTeclado();
 //		ingresoModeloEspecifico();
 //		ingresarModeloAutomaticamente();
-		return Test.ingresoEjemplo01(modelo);
+		return Test.ingresoEjemplo05(modelo);
+//		return Test.ingresoEjemplo01(modelo);
 //		return this.modelo;
 	}
 	

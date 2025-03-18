@@ -112,7 +112,7 @@ public final class Test {
 	 *&emsp;45+30-23=< 7900 <br>
 	 *&emsp;37+39+56=< -2100<br>
 	 *&emsp;63+68-27=<-7700<br>
-	 *&emsp;Solution no exite solucion posible
+	 *&emsp;Solution no exite solucion posible (infactible)
 	 * 
 	 */
 	public static Model ingresoEjemplo04(Model modelo) {
@@ -188,6 +188,37 @@ public final class Test {
 		
 		return modelo;	
 	}
+	
+	/**
+	 * @param modelo
+	 * @return
+	 * z = 1+3  (maximizar)<br>
+	 *&emsp;1+1=< 8 <br>
+	 *&emsp;1+3=< 12<br>
+	 *&emsp;-1+2=<4<br>
+	 *&emsp;Solution z=12 ; (2.4 ; 3.2 ; 2.4 ; 0 ; 0)
+	 * 
+	 */
+	public static Model ingresoEjemplo07(Model modelo) {
+		
+		modelo = new Model(2,3);
+		
+		modelo.setListZ(new ArrayList<Double>() {{add(1.0);add(3.0);}});
+		List<Double> a = new ArrayList<Double>();a.add(1.0);a.add(1.0);
+		modelo.getListaX().set(0, a);
+		List<Double> b = new ArrayList<Double>();b.add(1.0);b.add(3.0);
+		modelo.getListaX().set(1,b);
+		List<Double> c = new ArrayList<Double>();c.add(-1.0);c.add(2.0);
+		modelo.getListaX().set(2,c);
+		modelo.setResources(Arrays.asList(8.0,12.0,4.0));
+		modelo.setListaDesigualdad(IntStream.range(0, modelo.getCountEcu())
+				.mapToObj(x->"=<")
+				.collect(Collectors.toCollection(ArrayList::new)));
+		
+		return modelo;	
+	}
+	
+	
 }
 
 

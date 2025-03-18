@@ -33,7 +33,7 @@ class ModelTest {
 	 * 
 	 */
 	@Test
-	void testMetodoSimple() {
+	void testMetodoSimple01() {
 		Model modelo = new Model(2,4);
 		
 		modelo.setListZ(new ArrayList<Double>() {{add(5.0);add(4.0);}});
@@ -68,7 +68,7 @@ class ModelTest {
 	 * 
 	 */
 	@Test
-	void testMetodoSimple001() {
+	void testMetodoSimple02() {
 		Model modelo = new Model(3,3);
 		
 		modelo.setListZ(new ArrayList<Double>() {{add(2.0);add(5.0);add(9.0);}});
@@ -87,6 +87,69 @@ class ModelTest {
 		List<Double> l = modelo.metodoSimple().stream().map(x -> Math.round(x*100.0)/100.0).collect(Collectors.toList());
 
 		assertEquals(new ArrayList<Double>() {{add(5.83);add(0.0);add(1.17);add(0.0);add(16.0);add(0.0);add(9.5);}}, l);
+	}
+	
+	/**
+	 * 
+	 * z = 82+53+54  (maximizar)<br>
+	 *&emsp;36+72+63=< 89 <br>
+	 *&emsp;8+30+51=< 20<br>
+	 *&emsp;61+48+8=<70<br>
+	 *&emsp;Solution z=103,466 ; (1.119 ; 0 ; 0.217 ; 35.0649819 ; 0 ; 0)
+	 * 
+	 */
+	@Test
+	void testMetodoSimple03() {
+		Model modelo = new Model(3,3);
+		
+		modelo.setListZ(new ArrayList<Double>() {{add(82.0);add(53.0);add(54.0);}});
+		List<Double> a = new ArrayList<Double>();a.add(36.0);a.add(72.0);a.add(63.0);
+		modelo.getListaX().set(0, a);
+		List<Double> b = new ArrayList<Double>();b.add(8.0);b.add(30.0);b.add(51.0);
+		modelo.getListaX().set(1,b);
+		List<Double> c = new ArrayList<Double>();c.add(61.0);c.add(48.0);c.add(8.0);
+		modelo.getListaX().set(2,c);
+		modelo.setResources(Arrays.asList(89.0,20.0,70.0));
+		modelo.setListaDesigualdad(IntStream.range(0, modelo.getCountEcu())
+				.mapToObj(x->"=<")
+				.collect(Collectors.toCollection(ArrayList::new)));
+		
+		modelo = modelo.standardize();
+		List<Double> l = modelo.metodoSimple().stream().map(x -> Math.round(x*100.0)/100.0).collect(Collectors.toList());
+
+		assertEquals(new ArrayList<Double>() {{add(103.47);add(1.12);add(0.0);add(0.22);add(35.06);add(0.0);add(0.0);}}, l);
+	}
+	
+	
+	
+	/**
+	 * z = 1+3  (maximizar)<br>
+	 *&emsp;1+1=< 8 <br>
+	 *&emsp;1+3=< 12<br>
+	 *&emsp;-1+2=<4<br>
+	 *&emsp;Solution z=12 ; (2.4 ; 3.2 ; 2.4 ; 0 ; 0)
+	 * 
+	 */
+	@Test
+	void testMetodoSimple07() {	
+		Model modelo = new Model(2,3);
+		
+		modelo.setListZ(new ArrayList<Double>() {{add(1.0);add(3.0);}});
+		List<Double> a = new ArrayList<Double>();a.add(1.0);a.add(1.0);
+		modelo.getListaX().set(0, a);
+		List<Double> b = new ArrayList<Double>();b.add(1.0);b.add(3.0);
+		modelo.getListaX().set(1,b);
+		List<Double> c = new ArrayList<Double>();c.add(-1.0);c.add(2.0);
+		modelo.getListaX().set(2,c);
+		modelo.setResources(Arrays.asList(8.0,12.0,4.0));
+		modelo.setListaDesigualdad(IntStream.range(0, modelo.getCountEcu())
+				.mapToObj(x->"=<")
+				.collect(Collectors.toCollection(ArrayList::new)));
+		
+		modelo = modelo.standardize();
+		List<Double> l = modelo.metodoSimple().stream().map(x -> Math.round(x*100.0)/100.0).collect(Collectors.toList());
+
+		assertEquals(new ArrayList<Double>() {{add(12.0);add(2.4);add(3.2);add(2.4);add(0.0);add(0.0);}}, l);
 	}
 
 }
