@@ -2,13 +2,14 @@ package interfazUsuario;
 
 import java.util.stream.IntStream;
 
-import modelo.Model;
+import modelo.IModel;
+//import modelo.Model;
 
 final public class InterfaceUsuarioMostrarDatos {
 	
-	private Model model;
+	private IModel model;
 	
-	public void showDates(Model model){
+	public void showDates(IModel model){
 		this.model = model;
 		showFunctionObjZ();
 		showRestriction();
@@ -31,7 +32,7 @@ final public class InterfaceUsuarioMostrarDatos {
 	
 	
 	final private void showRestriction() {
-
+		
 		IntStream.range(0, model.getCountEcu())
 		.forEach( row -> {	
 			System.out.print("    ");	

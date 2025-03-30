@@ -3,8 +3,10 @@
  */
 package interfazUsuario;
 
+import modelo.IModel;
 import modelo.Model;
 import test.Test;
+import test.TestM;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,10 +24,10 @@ final public class InterfazUsuarioCargarDatos {
 	
 	private int countVar;
 	private int countEcu;
-	private Model modelo;
+	private IModel modelo;
 	private Scanner in = new Scanner(System.in);
 
-	public Model ingresarDatos() {
+	public IModel ingresarDatos() {
 		
 		//ingresarExtructuraDelModeloPorTeclado();
 		System.out.println("\n\n\n");
@@ -35,7 +37,8 @@ final public class InterfazUsuarioCargarDatos {
 //		ingresarModeloPorTeclado();
 //		ingresoModeloEspecifico();
 //		ingresarModeloAutomaticamente();
-		return Test.ingresoEjemplo05(modelo);
+//		return Test.ingresoEjemplo01(modelo);
+		return TestM.ingresoEjemplo05M();
 //		return Test.ingresoEjemplo01(modelo);
 //		return this.modelo;
 	}
@@ -124,7 +127,7 @@ final public class InterfazUsuarioCargarDatos {
 //		modelo.mostrarModelo();
 //	}
 	
-	private Model ingresarModeloAutomaticamente() {
+	private IModel ingresarModeloAutomaticamente() {
 		
 		modelo = new Model(getCountVar(), getCountEcu());
 		

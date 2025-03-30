@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import modelo.IModel;
 import modelo.Model;
 
 /**
@@ -25,7 +26,7 @@ public final class Test {
 	 *&emsp;Solucion z=21 ; x1=3 ; x2=1.5 ; x3=0 ; x4=0 ; x5=2.5; x6=0,5
 	 * 
 	 */
-	public static Model ingresoEjemplo01(Model modelo) {
+	public static IModel ingresoEjemplo01(IModel modelo) {
 		
 		modelo = new Model(2,4);
 		

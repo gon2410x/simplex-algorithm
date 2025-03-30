@@ -1,32 +1,30 @@
-package modelo;
+package modeloM;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import com.sun.net.httpserver.Authenticator.Result;
-
 import interfazUsuario.InterfazUsuarioMostrarTablaSimple;
+import modelo.IModel;
 
 /**
- * @author personal
+ * @author IO
  *
  */
-public class Model implements IModel {
+public class ModelM implements IModel {
 	
 	private int countVar;
 	private int countEcu;
-	private Double solucion;
+	private Double solution;
 	/**
-	 * funcion Objetivo
+	 * objective function
 	 */
 	private List<Double> functionZ;
 	private List<List<Double>> listX ;
 	private List<String> listDesigualdad;
 	/**
-	 * lista de Recursos
+	 * list of resources
 	 */
 	private List<Double> resources;
 	private List<Integer> listVarBasic;
@@ -35,12 +33,12 @@ public class Model implements IModel {
 		return listVarBasic;
 	}
 
-
-	public Model(int countVar, int countEcu) {
+	public ModelM(int countVar, int countEcu) {
 		
-		this.countVar = countVar;
+		System.out.println("Metodo M");
+		this.countVar = countVar; 
 		this.countEcu = countEcu;
-		this.solucion = 0.0;	
+		this.solution = 0.0;	
 		functionZ = new ArrayList<Double>();		
 		listX = IntStream.range(0, this.countEcu).mapToObj( x -> new ArrayList<Double>()).collect(Collectors.toCollection(ArrayList::new));
 		listDesigualdad = new ArrayList<String>();		
@@ -63,12 +61,12 @@ public class Model implements IModel {
 
 	
 	public Double getSolution() {
-		return solucion;
+		return solution;
 	}
 
 
-	public void setSolucion(Double solucion) {
-		this.solucion = solucion;
+	public void setSolution(Double solution) {
+		this.solution = solution;
 	}
 
 
@@ -105,10 +103,64 @@ public class Model implements IModel {
 	}
 
 
-	public Model standardize() {
-		RestriccionMenorQue();
+	private ArrayList<Integer> penalizacion = new ArrayList<Integer>();
+	final double M = 10000;
+
+	public ModelM standardize() {
+				
+		for (int row = 0; row < listDesigualdad.size(); row++) {	
+			
+			if(listDesigualdad.get(row) == "=") {
+				penalizacion.add(row);
+				listVarBasic.add(++row);
+			}
+
+			if(listDesigualdad.get(row) == "=<") {				
+				int countVarBasic = listX.get(0).size(); 
+				restriccionMenorQue(row);
+				listVarBasic.add(++countVarBasic);
+				this.countVar = listX.get(0).size();
+			}
+
+			if(listDesigualdad.get(row) == "=>") {				
+				int countVarBasic = listX.get(0).size(); 
+				restriccionMayorQue(row);
+				penalizacion.add(row);
+				listVarBasic.add(++countVarBasic);
+				this.countVar = listX.get(0).size();
+			}
+		}			
+		
+		for(int row = 0; row < penalizacion.size(); row++) {
+			restriccionPenalizacion(penalizacion.get(row));
+			this.countVar = listX.get(0).size();
+			int i = listVarBasic.indexOf(listVarBasic.get( penalizacion.get(row)));
+			listVarBasic.set(i, countVar);
+		}
+		
+
 		restricccionLadoDerechoNoNegativo();
 		return this;
+	}
+	
+	final private void eliminarInconcistencia(ArrayList<Integer> p) {
+		for(int column = 0; column < functionZ.size(); column++) {
+
+			double newZ = functionZ.get(column);
+			
+			for(int i=0; i<p.size();i++) {
+				newZ = newZ + M * listX.get(p.get(i)).get(column);
+			}
+			
+			functionZ.set(column, newZ);
+		}
+		
+		double ff=0;
+		for(int i=0; i<p.size();i++) {
+			ff = ff+resources.get(p.get(i))*M;
+		}
+		
+		setSolution(ff);
 	}
 	
 	final private void restricccionLadoDerechoNoNegativo() {
@@ -122,24 +174,34 @@ public class Model implements IModel {
 		});
 	}
 
-	final private void RestriccionMenorQue() {
+	final private void restriccionMenorQue(int row) {
 		
-		int countVarBasic = listX.get(0).size(); 
-		for (int row = 0; row < listDesigualdad.size(); row++) {	
-			if(listDesigualdad.get(row) == "=<") {		
-				listX.replaceAll(x -> { x.add(0.0); return x;});
-				listX.get(row).set(listX.get(row).size()-1 , 1.0);
-				functionZ.add(0.0);
-				listDesigualdad.set(row, "=");
-				listVarBasic.add(++countVarBasic);
-			}	
-		}			
-		this.countVar = listX.get(0).size();
+		listX.replaceAll(x -> { x.add(0.0); return x;});
+		listX.get(row).set(listX.get(row).size()-1 , 1.0);
+		functionZ.add(0.0);
+		listDesigualdad.set(row, "=");			
+	}
+	
+	final private void restriccionMayorQue(int row) {
+		
+		listX.replaceAll(x -> { x.add(0.0); return x;});
+		listX.get(row).set(listX.get(row).size()-1 , -1.0);
+		functionZ.add(0.0);
+		listDesigualdad.set(row, "=");			
+	}
+	
+	final private void restriccionPenalizacion(int row) {
+		
+		listX.replaceAll(x -> { x.add(0.0); return x;});
+		listX.get(row).set(listX.get(row).size()-1 , 1.0);
+		functionZ.add( M );
+		listDesigualdad.set(row, "=");			
 	}
 	
 	public List<Double> metodoSimple() {
 		int numberOfIteration = 0;
 		functionZ.replaceAll(z -> z * -1);
+		eliminarInconcistencia(penalizacion);
 		new InterfazUsuarioMostrarTablaSimple().MostrarDatos(this, numberOfIteration++);
 				
 		int varIn = 0;
@@ -150,7 +212,7 @@ public class Model implements IModel {
 			varIn = getVarIn(functionZ);
 			System.out.print("-------- : "+varIn+"\n");
 			
-			if ( varIn < 0) { break;} //condicion de parada del M�todo Simplex
+			if ( varIn < 0) { break;} //condicion de parada del Método Simplex
 			
 			varOut = getVarOut(varIn);
 			System.out.println("este valor es :: "+varOut);
@@ -186,7 +248,7 @@ public class Model implements IModel {
 		resources.set(varOut, resources.get(varOut) / elementoPivot);
 		listX.get(varOut).replaceAll(x -> x / elementoPivot);
 		
-		setSolucion( getSolution() - functionZ.get(varIn)*getResources().get(varOut));
+		setSolution( getSolution() - functionZ.get(varIn)*getResources().get(varOut));
 
 		List<Double> z = IntStream.range(0, countVar)
 								  .mapToObj( x -> functionZ.get(x) - (functionZ.get(varIn) * listX.get(varOut).get(x)))//rActual-suCoefColuPiv*NueRenPivo
@@ -218,8 +280,8 @@ public class Model implements IModel {
 	 * @Throws
 	 */
 	private int getVarIn(List<Double> list) {
-		if(list.stream().anyMatch(x -> x < 0)) {
-			final double aux = list.stream().min(Double::compare).get();
+		if(list.stream().anyMatch(x -> x > 0)) {
+			final double aux = list.stream().max(Double::compare).get();
 			return list.indexOf(aux);
 		}
 		return -1;
@@ -235,9 +297,7 @@ public class Model implements IModel {
 				.filter(x -> listX.get(x).get(varIn) != 0) 
 				.filter(z -> resources.get(z) / listX.get(z).get(varIn) >= 0)
 				.reduce((accumulator,y) -> resources.get(accumulator) / listX.get(accumulator).get(varIn) > resources.get(y) / listX.get(y).get(varIn) ? y : accumulator)
-				.orElse(-1);
-		
-//		return listAux.indexOf(varSalida2);
+				.orElse(-1);		
 	}
 
 }
