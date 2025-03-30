@@ -2,13 +2,14 @@ package interfazUsuario;
 
 import java.util.stream.IntStream;
 
+import modelo.IModel;
 import modelo.Model;
 
 public class InterfazUsuarioMostrarTablaSimple {
 
-	private Model modelo;
+	private IModel modelo;
 	
-	public void MostrarDatos(Model modelo, int numberOfIterations){
+	public void MostrarDatos(IModel modelo, int numberOfIterations){
 		this.modelo = modelo;
 		
 		System.out.println("\n\t\n\t\t| Tabla Simplex "+numberOfIterations+"|\n\t\t-----------------\n");
@@ -33,7 +34,7 @@ public class InterfazUsuarioMostrarTablaSimple {
 		 		.forEach(x -> System.out.printf("%1s %9.3f %s", x > 0 && modelo.getListZ().get(x) >= 0 ? "+"
 		 																					   :"", modelo.getListZ().get(x) , " X" + (x+1) + " "));
 		
-		System.out.printf("%9.3f", modelo.getSolucion() );
+		System.out.printf("%9.3f", modelo.getSolution() );
 		System.out.println();	
 	}
 	
