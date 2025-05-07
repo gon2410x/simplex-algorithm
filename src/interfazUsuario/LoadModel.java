@@ -4,9 +4,12 @@
 package interfazUsuario;
 
 import modelo.IModel;
+import modelo.IModel;
+import modelo.ILinearModel;
 import modelo.Model;
-import test.Test;
-import test.TestM;
+import modelo.LinearModel;
+import test.Examples;
+import test.ExamplesM;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,16 +23,15 @@ import java.util.stream.IntStream;
  * @author personal
  *
  */
-final public class InterfazUsuarioCargarDatos {
+final public class LoadModel {
 	
 	private int countVar;
 	private int countEcu;
 	private IModel modelo;
 	private Scanner in = new Scanner(System.in);
 
-	public IModel ingresarDatos() {
+	public ILinearModel ingresarDatos() {
 		
-		//ingresarExtructuraDelModeloPorTeclado();
 		System.out.println("\n\n\n");
 //		System.out.println("\tIngresar datos Manualmente presione\t- 1 ");
 //		System.out.print("\tIngresar datos Automaticamente presione\t- 2\n ");
@@ -37,9 +39,7 @@ final public class InterfazUsuarioCargarDatos {
 //		ingresarModeloPorTeclado();
 //		ingresoModeloEspecifico();
 //		ingresarModeloAutomaticamente();
-//		return Test.ingresoEjemplo01(modelo);
-		return TestM.ingresoEjemplo05M();
-//		return Test.ingresoEjemplo01(modelo);
+		return Examples.ingresoEjemplo03();
 //		return this.modelo;
 	}
 	
@@ -65,7 +65,7 @@ final public class InterfazUsuarioCargarDatos {
 
 	private void ingresoModeloEspecifico() {
 		
-		modelo = new Model(getCountVar(), getCountEcu());
+		ILinearModel modelo = new LinearModel(getCountVar(), getCountEcu());
 		
 		modelo.setListZ(new ArrayList<Double>() {{add(5.0);add(4.0);}});
 		List<Double> a = new ArrayList<Double>();a.add(6.0);a.add(4.0);
@@ -129,7 +129,7 @@ final public class InterfazUsuarioCargarDatos {
 	
 	private IModel ingresarModeloAutomaticamente() {
 		
-		modelo = new Model(getCountVar(), getCountEcu());
+		ILinearModel modelo = new LinearModel(getCountVar(), getCountEcu());
 		
 		modelo.setListZ(arrayIntRandom(countVar));
 		
@@ -152,7 +152,8 @@ final public class InterfazUsuarioCargarDatos {
 		
 		
 		System.out.println("\n\n");	
-		return modelo;
+		Model m = new Model(modelo);
+		return m;
 	}
 	
 	final private ArrayList<Double> arrayIntRandom(int size){

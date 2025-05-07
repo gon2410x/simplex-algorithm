@@ -3,8 +3,9 @@
  */
 package main;
 
-import interfazUsuario.InterfaceUsuarioMostrarDatos;
-import interfazUsuario.InterfazUsuarioCargarDatos;
+import interfazUsuario.DisplayModelConsole;
+import interfazUsuario.LoadModel;
+import modelo.IModel;
 import modelo.IModel;
 import modelo.Model;
 import modeloM.ModelM;
@@ -18,21 +19,20 @@ public class Main {
 	/**
 	 * @param args
 	 */
-	public static void main(String[] args) {
-
+	public static void main(String[] args) {	
+ 
 		System.out.println("\tInicio del Metodo Simple\n\t------------------------\n\n\n");
-					
-		IModel model = new InterfazUsuarioCargarDatos().ingresarDatos();
-		new InterfaceUsuarioMostrarDatos().showDates(model);
+		
+		IModel model = new Model(new LoadModel().ingresarDatos());
+		new DisplayModelConsole().showDates(model.getLinearModel());
 		
 		System.out.println("\n\n\tModelo Estandarizaci�n\n\t----------------------\n");
 		model = model.standardize();
-		new InterfaceUsuarioMostrarDatos().showDates(model);
+		new DisplayModelConsole().showDates(model.getLinearModel());
 		System.out.println("\n\n");	
 		
 		System.out.println("El resultado del metodo simple : "+model.metodoSimple());
 		System.out.println("\n\n\tFin del M�todo Simplex\n");
-		new InterfaceUsuarioMostrarDatos().showDates(model);
- 
+		new DisplayModelConsole().showDates(model.getLinearModel());
 	}	
 }

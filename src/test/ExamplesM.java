@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import modelo.ILinearModel;
 import modelo.IModel;
+import modelo.LinearModel;
 import modeloM.ModelM;
 
-public class TestM {
+public class ExamplesM {
 
 	/**
 	 * @param null
@@ -19,9 +21,9 @@ public class TestM {
 	 *&emsp;Solution z=17/5 ; x1=2/5 ; x2=9/5 ; x3=1 ; x4=0 ; x5=0; x6=0
 	 * 
 	 */
-	public static IModel ingresoEjemplo01M() {
+	public static ILinearModel ingresoEjemplo01M() {
 		
-		IModel modelo = new ModelM(2,3);
+		ILinearModel modelo = new LinearModel(2,3);
 		
 		modelo.setListZ(new ArrayList<Double>() {{add(4.0);add(1.0);}});
 		List<Double> a = new ArrayList<Double>();a.add(3.0);a.add(1.0);
@@ -46,9 +48,9 @@ public class TestM {
 	 *&emsp;Solution z=8 ; x1=0 ; x2=4 ; x3=0 ; x4=38 ; x5=0; x6=21; x7=0;
 	 * 
 	 */
-	public static IModel ingresoEjemplo02M() {
+	public static ILinearModel ingresoEjemplo02M() {
 		
-		IModel modelo = new ModelM(3,3);
+		ILinearModel modelo = new LinearModel(3,3);
 		
 		modelo.setListZ(new ArrayList<Double>() {{add(9.0);add(2.0);add(5.0);}});
 		List<Double> a = new ArrayList<Double>();a.add(4.0);a.add(3.0);a.add(6.0);
@@ -72,9 +74,9 @@ public class TestM {
 	 *&emsp;Solution z=163/2 ; x1=1/2 ; x2=0 ; x3=0 ; x4=1 ; x5=0;x6=0;
 	 * 
 	 */
-	public static IModel ingresoEjemplo03M() {
+	public static ILinearModel ingresoEjemplo03M() {
 		
-		IModel modelo = new ModelM(3,2);
+		ILinearModel modelo = new LinearModel(3,2);
 		
 		modelo.setListZ(new ArrayList<Double>() {{add(163.0);add(120.0);add(220.0);}});
 		List<Double> a = new ArrayList<Double>();a.add(2.0);a.add(1.0);a.add(4.0);
@@ -98,9 +100,9 @@ public class TestM {
 	 *&emsp;Solution z=7000 ; x1=280 ; x2=0 ; x3=0 x4=207/5; x5=81 ; x6=0;
 	 * 
 	 */
-	public static IModel ingresoEjemplo05M() {
+	public static ILinearModel ingresoEjemplo05M() {
 		
-		IModel modelo = new ModelM(2,3);
+		ILinearModel modelo = new LinearModel(2,3);
 		
 		modelo.setListZ(new ArrayList<Double>() {{add(25.0);add(22.0);}});
 		List<Double> a = new ArrayList<Double>();a.add(0.45);a.add(0.35);

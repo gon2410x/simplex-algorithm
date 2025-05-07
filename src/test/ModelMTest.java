@@ -9,12 +9,13 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 
 import modelo.IModel;
+import modeloM.ModelM;
 
 class ModelMTest {
 
 	@Test
 	void testMetodoMSimple01() {
-		IModel modelo = TestM.ingresoEjemplo01M();
+		ModelM modelo = new ModelM(ExamplesM.ingresoEjemplo01M());
 		
 		modelo = modelo.standardize();
 		List<Double> modelResult = modelo.metodoSimple().stream().map(x -> Math.round(x*100.0)/100.0).collect(Collectors.toList());
@@ -34,7 +35,7 @@ class ModelMTest {
 	
 	@Test
 	void testMetodoMSimple02() {
-		IModel modelo = TestM.ingresoEjemplo02M();
+		ModelM modelo = new ModelM( ExamplesM.ingresoEjemplo02M());
 		
 		modelo = modelo.standardize();
 		List<Double> modelResult = modelo.metodoSimple().stream().map(x -> Math.round(x*100.0)/100.0).collect(Collectors.toList());
@@ -56,7 +57,7 @@ class ModelMTest {
 	
 	@Test
 	void testMetodoMSimple03() {
-		IModel modelo = TestM.ingresoEjemplo03M();
+		ModelM modelo = new ModelM(ExamplesM.ingresoEjemplo03M());
 		
 		modelo = modelo.standardize();
 		List<Double> modelResult = modelo.metodoSimple().stream().map(x -> Math.round(x*100.0)/100.0).collect(Collectors.toList());
@@ -76,7 +77,7 @@ class ModelMTest {
 	
 	@Test
 	void testMetodoMSimple05() {
-		IModel modelo = TestM.ingresoEjemplo05M();
+		ModelM modelo = new ModelM(ExamplesM.ingresoEjemplo05M());
 		
 		modelo = modelo.standardize();
 		List<Double> modelResult = modelo.metodoSimple().stream().map(x -> Math.round(x*100.0)/100.0).collect(Collectors.toList());

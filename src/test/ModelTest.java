@@ -9,11 +9,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import org.junit.jupiter.api.Test;
 
+import modelo.ILinearModel;
 import modelo.Model;
+import modelo.LinearModel;
 
 /**
  * @author personal
@@ -34,26 +35,12 @@ class ModelTest {
 	 */
 	@Test
 	void testMetodoSimple01() {
-		Model modelo = new Model(2,4);
-		
-		modelo.setListZ(new ArrayList<Double>() {{add(5.0);add(4.0);}});
-		List<Double> a = new ArrayList<Double>();a.add(6.0);a.add(4.0);
-		modelo.getListaX().set(0, a);
-		List<Double> b = new ArrayList<Double>();b.add(1.0);b.add(2.0);
-		modelo.getListaX().set(1,b);
-		List<Double> c = new ArrayList<Double>();c.add(-1.0);c.add(1.0);
-		modelo.getListaX().set(2,c);
-		List<Double> d = new ArrayList<Double>();d.add(0.0);d.add(1.0);
-		modelo.getListaX().set(3,d);
-		modelo.setResources(Arrays.asList(24.0,6.0,1.0,2.0));
-		modelo.setListaDesigualdad(IntStream.range(0, modelo.getCountEcu())
-				.mapToObj(x->"=<")
-				.collect(Collectors.toCollection(ArrayList::new)));
-		
-		modelo = modelo.standardize();
-		List<Double> l = modelo.metodoSimple().stream().map(x -> Math.round(x*100.0)/100.0).collect(Collectors.toList());
+				
+		Model model = new Model(Examples.ingresoEjemplo01());
+		model = model.standardize();
+		List<Double> modelResult = model.metodoSimple().stream().map(x -> Math.round(x*100.0)/100.0).collect(Collectors.toList());
 
-		assertEquals(new ArrayList<Double>() {{add(21.0);add(3.0);add(1.5);add(0.0);add(0.0);add(2.5);add(0.5);}}, l);
+		assertEquals(new ArrayList<Double>() {{add(21.0);add(3.0);add(1.5);add(0.0);add(0.0);add(2.5);add(0.5);}}, modelResult);
 	}
 	
 	
@@ -69,24 +56,12 @@ class ModelTest {
 	 */
 	@Test
 	void testMetodoSimple02() {
-		Model modelo = new Model(3,3);
 		
-		modelo.setListZ(new ArrayList<Double>() {{add(2.0);add(5.0);add(9.0);}});
-		List<Double> a = new ArrayList<Double>();a.add(1.0);a.add(6.0);a.add(8.0);
-		modelo.getListaX().set(0, a);
-		List<Double> b = new ArrayList<Double>();b.add(52.0);b.add(6.0);b.add(20.0);
-		modelo.getListaX().set(1,b);
-		List<Double> c = new ArrayList<Double>();c.add(7.0);c.add(9.0);c.add(11.0);
-		modelo.getListaX().set(2,c);
-		modelo.setResources(Arrays.asList(23.0,7.0,20.0));
-		modelo.setListaDesigualdad(IntStream.range(0, modelo.getCountEcu())
-				.mapToObj(x->"=<")
-				.collect(Collectors.toCollection(ArrayList::new)));
-		
-		modelo = modelo.standardize();
-		List<Double> l = modelo.metodoSimple().stream().map(x -> Math.round(x*100.0)/100.0).collect(Collectors.toList());
+		Model model = new Model(Examples.ingresoEjemplo02());
+		model = model.standardize();
+		List<Double> modelResult = model.metodoSimple().stream().map(x -> Math.round(x*100.0)/100.0).collect(Collectors.toList());
 
-		assertEquals(new ArrayList<Double>() {{add(5.83);add(0.0);add(1.17);add(0.0);add(16.0);add(0.0);add(9.5);}}, l);
+		assertEquals(new ArrayList<Double>() {{add(5.83);add(0.0);add(1.17);add(0.0);add(16.0);add(0.0);add(9.5);}}, modelResult);
 	}
 	
 	/**
@@ -100,26 +75,34 @@ class ModelTest {
 	 */
 	@Test
 	void testMetodoSimple03() {
-		Model modelo = new Model(3,3);
+		ILinearModel modelo = new LinearModel(3,3);
 		
-		modelo.setListZ(new ArrayList<Double>() {{add(82.0);add(53.0);add(54.0);}});
-		List<Double> a = new ArrayList<Double>();a.add(36.0);a.add(72.0);a.add(63.0);
-		modelo.getListaX().set(0, a);
-		List<Double> b = new ArrayList<Double>();b.add(8.0);b.add(30.0);b.add(51.0);
-		modelo.getListaX().set(1,b);
-		List<Double> c = new ArrayList<Double>();c.add(61.0);c.add(48.0);c.add(8.0);
-		modelo.getListaX().set(2,c);
-		modelo.setResources(Arrays.asList(89.0,20.0,70.0));
-		modelo.setListaDesigualdad(IntStream.range(0, modelo.getCountEcu())
-				.mapToObj(x->"=<")
-				.collect(Collectors.toCollection(ArrayList::new)));
-		
-		modelo = modelo.standardize();
-		List<Double> l = modelo.metodoSimple().stream().map(x -> Math.round(x*100.0)/100.0).collect(Collectors.toList());
+		Model model = new Model(Examples.ingresoEjemplo03());
+		model = model.standardize();
+		List<Double> modelResult = model.metodoSimple().stream().map(x -> Math.round(x*100.0)/100.0).collect(Collectors.toList());
 
-		assertEquals(new ArrayList<Double>() {{add(103.47);add(1.12);add(0.0);add(0.22);add(35.06);add(0.0);add(0.0);}}, l);
+		assertEquals(new ArrayList<Double>() {{add(103.47);add(1.12);add(0.0);add(0.22);add(35.06);add(0.0);add(0.0);}}, modelResult);
 	}
 	
+	/**
+	 * @param modelo
+	 * @return
+	 * z = 17+1-67  (maximizar)<br>
+	 *&emsp;9-18-75=< -6200 <br>
+	 *&emsp;-5-44-46=< -2600<br>
+	 *&emsp;-82+56-2=<-7900<br>
+	 *&emsp;Solution no esta acotada
+	 * 
+	 */
+	@Test
+	void testMetodoSimple05() {	
+
+		Model model = new Model(Examples.ingresoEjemplo05());
+		model = model.standardize();
+		List<Double> modelResult = model.metodoSimple();
+
+		assertEquals(new ArrayList<Double>(Arrays.asList(Double.POSITIVE_INFINITY)) , modelResult);
+	}
 	
 	
 	/**
@@ -132,24 +115,12 @@ class ModelTest {
 	 */
 	@Test
 	void testMetodoSimple07() {	
-		Model modelo = new Model(2,3);
 		
-		modelo.setListZ(new ArrayList<Double>() {{add(1.0);add(3.0);}});
-		List<Double> a = new ArrayList<Double>();a.add(1.0);a.add(1.0);
-		modelo.getListaX().set(0, a);
-		List<Double> b = new ArrayList<Double>();b.add(1.0);b.add(3.0);
-		modelo.getListaX().set(1,b);
-		List<Double> c = new ArrayList<Double>();c.add(-1.0);c.add(2.0);
-		modelo.getListaX().set(2,c);
-		modelo.setResources(Arrays.asList(8.0,12.0,4.0));
-		modelo.setListaDesigualdad(IntStream.range(0, modelo.getCountEcu())
-				.mapToObj(x->"=<")
-				.collect(Collectors.toCollection(ArrayList::new)));
-		
-		modelo = modelo.standardize();
-		List<Double> l = modelo.metodoSimple().stream().map(x -> Math.round(x*100.0)/100.0).collect(Collectors.toList());
+		Model model = new Model(Examples.ingresoEjemplo07());
+		model = model.standardize();
+		List<Double> modelResult = model.metodoSimple().stream().map(x -> Math.round(x*100.0)/100.0).collect(Collectors.toList());
 
-		assertEquals(new ArrayList<Double>() {{add(12.0);add(2.4);add(3.2);add(2.4);add(0.0);add(0.0);}}, l);
+		assertEquals(new ArrayList<Double>() {{add(12.0);add(2.4);add(3.2);add(2.4);add(0.0);add(0.0);}}, modelResult);
 	}
 
 }

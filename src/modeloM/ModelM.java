@@ -5,8 +5,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import interfazUsuario.InterfazUsuarioMostrarTablaSimple;
+import interfazUsuario.DisplayTableConsole;
 import modelo.IModel;
+import modelo.IModel;
+import modelo.LinearModel;
+import modelo.ILinearModel;
 
 /**
  * @author IO
@@ -14,93 +17,41 @@ import modelo.IModel;
  */
 public class ModelM implements IModel {
 	
-	private int countVar;
-	private int countEcu;
-	private Double solution;
-	/**
-	 * objective function
-	 */
-	private List<Double> functionZ;
-	private List<List<Double>> listX ;
-	private List<String> listDesigualdad;
-	/**
-	 * list of resources
-	 */
-	private List<Double> resources;
+	
+	private ILinearModel linearModel;
+	
+	public ILinearModel getLinearModel() {
+		return this.linearModel;
+	}
+	
 	private List<Integer> listVarBasic;
 	
 	public List<Integer> getListVarBasic() {
 		return listVarBasic;
 	}
+	
+	
+
+	/**
+	 * @param linearModel
+	 */
+	public ModelM(ILinearModel linearModel) {
+		super();
+		System.out.println("Metodo M");
+		this.linearModel = linearModel;
+		linearModel.setSolucion(0.0);
+		listVarBasic = new ArrayList<Integer>();
+	}
+
+
 
 	public ModelM(int countVar, int countEcu) {
 		
 		System.out.println("Metodo M");
-		this.countVar = countVar; 
-		this.countEcu = countEcu;
-		this.solution = 0.0;	
-		functionZ = new ArrayList<Double>();		
-		listX = IntStream.range(0, this.countEcu).mapToObj( x -> new ArrayList<Double>()).collect(Collectors.toCollection(ArrayList::new));
-		listDesigualdad = new ArrayList<String>();		
-		resources = new ArrayList<Double>();
+		linearModel = new LinearModel(countVar, countEcu);
+		linearModel.setSolucion(0.0);
 		listVarBasic = new ArrayList<Integer>();
-	}	
-	
-
-	public int getCountVar() {
-		return countVar;
-	}
-	
-	public void setCountVar(int countVar) {
-		this.countVar = countVar;
-	}
-
-	public int getCountEcu() {
-		return countEcu;
-	}
-
-	
-	public Double getSolution() {
-		return solution;
-	}
-
-
-	public void setSolution(Double solution) {
-		this.solution = solution;
-	}
-
-
-	public List<Double> getListZ() {
-		return functionZ;
-	}
-	
-	public void setListZ(List<Double> listaZ) {
-		this.functionZ = listaZ;
-	}
-	
-	public List<List<Double>> getListaX() {
-		return listX;
-	}
-
-	public void setListaX(List<List<Double>> listaX) {
-		this.listX = listaX;
-	}	
-	
-	public List<String> getListaDesigualdad() {
-		return listDesigualdad;
-	}
-
-	public void setListaDesigualdad(List<String> listaDesigualdad) {
-		this.listDesigualdad = listaDesigualdad;
-	}	
-	
-	public List<Double> getResources() {
-		return resources;
-	}
-
-	public void setResources(List<Double> resources) {
-		this.resources = resources;
-	}
+	}		
 
 
 	private ArrayList<Integer> penalizacion = new ArrayList<Integer>();
@@ -108,34 +59,34 @@ public class ModelM implements IModel {
 
 	public ModelM standardize() {
 				
-		for (int row = 0; row < listDesigualdad.size(); row++) {	
+		for (int row = 0; row < linearModel.getListaDesigualdad().size(); row++) {	
 			
-			if(listDesigualdad.get(row) == "=") {
+			if(linearModel.getListaDesigualdad().get(row) == "=") {
 				penalizacion.add(row);
 				listVarBasic.add(++row);
 			}
 
-			if(listDesigualdad.get(row) == "=<") {				
-				int countVarBasic = listX.get(0).size(); 
+			if(linearModel.getListaDesigualdad().get(row) == "=<") {				
+				int countVarBasic = linearModel.getListaX().get(0).size(); 
 				restriccionMenorQue(row);
 				listVarBasic.add(++countVarBasic);
-				this.countVar = listX.get(0).size();
+				linearModel.setCountVar(linearModel.getListaX().get(0).size());
 			}
 
-			if(listDesigualdad.get(row) == "=>") {				
-				int countVarBasic = listX.get(0).size(); 
+			if(linearModel.getListaDesigualdad().get(row) == "=>") {				
+				int countVarBasic = linearModel.getListaX().get(0).size(); 
 				restriccionMayorQue(row);
 				penalizacion.add(row);
 				listVarBasic.add(++countVarBasic);
-				this.countVar = listX.get(0).size();
+				linearModel.setCountVar(linearModel.getListaX().get(0).size());
 			}
 		}			
 		
 		for(int row = 0; row < penalizacion.size(); row++) {
 			restriccionPenalizacion(penalizacion.get(row));
-			this.countVar = listX.get(0).size();
+			linearModel.setCountVar(linearModel.getListaX().get(0).size());
 			int i = listVarBasic.indexOf(listVarBasic.get( penalizacion.get(row)));
-			listVarBasic.set(i, countVar);
+			listVarBasic.set(i, linearModel.getCountVar());
 		}
 		
 
@@ -144,72 +95,72 @@ public class ModelM implements IModel {
 	}
 	
 	final private void eliminarInconcistencia(ArrayList<Integer> p) {
-		for(int column = 0; column < functionZ.size(); column++) {
+		for(int column = 0; column < linearModel.getListZ().size(); column++) {
 
-			double newZ = functionZ.get(column);
+			double newZ = linearModel.getListZ().get(column);
 			
 			for(int i=0; i<p.size();i++) {
-				newZ = newZ + M * listX.get(p.get(i)).get(column);
+				newZ = newZ + M * linearModel.getListaX().get(p.get(i)).get(column);
 			}
 			
-			functionZ.set(column, newZ);
+			linearModel.getListZ().set(column, newZ);
 		}
 		
 		double ff=0;
 		for(int i=0; i<p.size();i++) {
-			ff = ff+resources.get(p.get(i))*M;
+			ff = ff+ linearModel.getResources().get(p.get(i))*M;
 		}
 		
-		setSolution(ff);
+		linearModel.setSolucion(ff);
 	}
 	
 	final private void restricccionLadoDerechoNoNegativo() {
 		
-		IntStream.range(0, getCountEcu())
+		IntStream.range(0, linearModel.getCountEcu())
 				 .forEach(row -> {		
-					 if(resources.get(row) < 0) {
-						 resources.set(row, resources.get(row)*-1);
-						 listX.get(row).replaceAll(x -> x*-1);
+					 if(linearModel.getResources().get(row) < 0) {
+						 linearModel.getResources().set(row, linearModel.getResources().get(row)*-1);
+						 linearModel.getListaX().get(row).replaceAll(x -> x*-1);
 					 }
 		});
 	}
 
 	final private void restriccionMenorQue(int row) {
 		
-		listX.replaceAll(x -> { x.add(0.0); return x;});
-		listX.get(row).set(listX.get(row).size()-1 , 1.0);
-		functionZ.add(0.0);
-		listDesigualdad.set(row, "=");			
+		linearModel.getListaX().replaceAll(x -> { x.add(0.0); return x;});
+		linearModel.getListaX().get(row).set(linearModel.getListaX().get(row).size()-1 , 1.0);
+		linearModel.getListZ().add(0.0);
+		linearModel.getListaDesigualdad().set(row, "=");			
 	}
 	
 	final private void restriccionMayorQue(int row) {
 		
-		listX.replaceAll(x -> { x.add(0.0); return x;});
-		listX.get(row).set(listX.get(row).size()-1 , -1.0);
-		functionZ.add(0.0);
-		listDesigualdad.set(row, "=");			
+		linearModel.getListaX().replaceAll(x -> { x.add(0.0); return x;});
+		linearModel.getListaX().get(row).set(linearModel.getListaX().get(row).size()-1 , -1.0);
+		linearModel.getListZ().add(0.0);
+		linearModel.getListaDesigualdad().set(row, "=");			
 	}
 	
 	final private void restriccionPenalizacion(int row) {
 		
-		listX.replaceAll(x -> { x.add(0.0); return x;});
-		listX.get(row).set(listX.get(row).size()-1 , 1.0);
-		functionZ.add( M );
-		listDesigualdad.set(row, "=");			
+		linearModel.getListaX().replaceAll(x -> { x.add(0.0); return x;});
+		linearModel.getListaX().get(row).set(linearModel.getListaX().get(row).size()-1 , 1.0);
+		linearModel.getListZ().add( M );
+		linearModel.getListaDesigualdad().set(row, "=");			
 	}
 	
 	public List<Double> metodoSimple() {
 		int numberOfIteration = 0;
-		functionZ.replaceAll(z -> z * -1);
+		linearModel.getListZ().replaceAll(z -> z * -1);
 		eliminarInconcistencia(penalizacion);
-		new InterfazUsuarioMostrarTablaSimple().MostrarDatos(this, numberOfIteration++);
+		new DisplayTableConsole().MostrarDatos(this, numberOfIteration++);
 				
 		int varIn = 0;
 		int varOut = 0;
 		
 		while( true ) { // Iteration
 
-			varIn = getVarIn(functionZ);
+			varIn = getVarIn(linearModel.getListZ());
 			System.out.print("-------- : "+varIn+"\n");
 			
 			if ( varIn < 0) { break;} //condicion de parada del Método Simplex
@@ -221,20 +172,20 @@ public class ModelM implements IModel {
 			System.out.print("Variable de Entrada : X"+(varIn+1)+"   -    Variable de Salida : X"+(listVarBasic.get(varOut)));
 			operacionDeRenglonGaussJordan(varIn,varOut);
 			listVarBasic.set(varOut, varIn+1);
-			new InterfazUsuarioMostrarTablaSimple().MostrarDatos(this, numberOfIteration++);
+			new DisplayTableConsole().MostrarDatos(this, numberOfIteration++);
 			
 		}
 		
 		
 		ArrayList<Double> result = new ArrayList<Double>();
-		result.add(getSolution());
+		result.add(linearModel.getSolution());
 		
-		for(int i=0; i<countVar;i++) {
+		for(int i=0; i < linearModel.getCountVar();i++) {
 			result.add(0.0);
 		}
 
-		for(int i = 0; i < resources.size(); i++) {
-			result.set(listVarBasic.get(i), resources.get(i));
+		for(int i = 0; i < linearModel.getResources().size(); i++) {
+			result.set(listVarBasic.get(i), linearModel.getResources().get(i));
 		}
 		
 		System.out.println("este es el resultado : "+result);
@@ -243,33 +194,33 @@ public class ModelM implements IModel {
 
 	private void operacionDeRenglonGaussJordan(final int varIn, final int varOut) {
 		
-		final double elementoPivot = listX.get(varOut).get(varIn);
+		final double elementoPivot = linearModel.getListaX().get(varOut).get(varIn);
 		
-		resources.set(varOut, resources.get(varOut) / elementoPivot);
-		listX.get(varOut).replaceAll(x -> x / elementoPivot);
+		linearModel.getResources().set(varOut, linearModel.getResources().get(varOut) / elementoPivot);
+		linearModel.getListaX().get(varOut).replaceAll(x -> x / elementoPivot);
 		
-		setSolution( getSolution() - functionZ.get(varIn)*getResources().get(varOut));
+		linearModel.setSolucion( linearModel.getSolution()- linearModel.getListZ().get(varIn)*linearModel.getResources().get(varOut));
 
-		List<Double> z = IntStream.range(0, countVar)
-								  .mapToObj( x -> functionZ.get(x) - (functionZ.get(varIn) * listX.get(varOut).get(x)))//rActual-suCoefColuPiv*NueRenPivo
+		List<Double> z = IntStream.range(0, linearModel.getCountVar())
+								  .mapToObj( x -> linearModel.getListZ().get(x) - (linearModel.getListZ().get(varIn) * linearModel.getListaX().get(varOut).get(x)))//rActual-suCoefColuPiv*NueRenPivo
 								  .collect(Collectors.toCollection(ArrayList::new));
 		
-		setListZ(z);
+		linearModel.setListZ(z);
 		
-		List<List<Double>> x = IntStream.range(0, countEcu)
+		List<List<Double>> x = IntStream.range(0, linearModel.getCountEcu())
 										.mapToObj(row -> {if(row == varOut) {
-															  return listX.get(varOut);
+															  return linearModel.getListaX().get(varOut);
 														  } else {
-															  resources.set(row, resources.get(row)-listX.get(row).get(varIn)*resources.get(varOut));
-															  return aux(listX.get(row), listX.get(varOut), varIn);
+															  linearModel.getResources().set(row, linearModel.getResources().get(row)-linearModel.getListaX().get(row).get(varIn)*linearModel.getResources().get(varOut));
+															  return aux(linearModel.getListaX().get(row), linearModel.getListaX().get(varOut), varIn);
 														  }
 										})
 										.collect(Collectors.toCollection(ArrayList::new));
-		setListaX(x);
+		linearModel.setListaX(x);
 	}
 
 	private List<Double> aux(List<Double> list, List<Double> listAux, int varIn) {
-		return IntStream.range(0, countVar)
+		return IntStream.range(0, linearModel.getCountVar())
 									.mapToObj( x -> list.get(x) - list.get(varIn) * listAux.get(x))
 									.collect(Collectors.toCollection(ArrayList::new));
 	}
@@ -289,14 +240,14 @@ public class ModelM implements IModel {
 	
 	private int getVarOut(final int varIn) {//prueba de optimalidad
 	
-		if(listX.stream().allMatch(x -> x.get(varIn) < 0)) {
+		if(linearModel.getListaX().stream().allMatch(x -> x.get(varIn) < 0)) {
 			System.out.println("La soluci�n no esta Acotada, columna de la variable X" + (varIn+1) + " son todas negativas -> no hay variable de salida");
 		}		
 					
-		return IntStream.rangeClosed(0, countEcu-1)
-				.filter(x -> listX.get(x).get(varIn) != 0) 
-				.filter(z -> resources.get(z) / listX.get(z).get(varIn) >= 0)
-				.reduce((accumulator,y) -> resources.get(accumulator) / listX.get(accumulator).get(varIn) > resources.get(y) / listX.get(y).get(varIn) ? y : accumulator)
+		return IntStream.rangeClosed(0, linearModel.getCountEcu()-1)
+				.filter(x -> linearModel.getListaX().get(x).get(varIn) != 0) 
+				.filter(z -> linearModel.getResources().get(z) / linearModel.getListaX().get(z).get(varIn) >= 0)
+				.reduce((accumulator,y) -> linearModel.getResources().get(accumulator) / linearModel.getListaX().get(accumulator).get(varIn) > linearModel.getResources().get(y) / linearModel.getListaX().get(y).get(varIn) ? y : accumulator)
 				.orElse(-1);		
 	}
 
