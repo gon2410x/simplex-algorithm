@@ -9,6 +9,7 @@ import modelo.IModel;
 import modelo.IModel;
 import modelo.Model;
 import modeloM.ModelM;
+import twoPhaseMethod.TwoPhaseMethod;
 
 /**
  * @author personal
@@ -23,7 +24,7 @@ public class Main {
  
 		System.out.println("\tInicio del Metodo Simple\n\t------------------------\n\n\n");
 		
-		IModel model = new Model(new LoadModel().ingresarDatos());
+		IModel model = new TwoPhaseMethod(new LoadModel().ingresarDatos());
 		new DisplayModelConsole().showDates(model.getLinearModel());
 		
 		System.out.println("\n\n\tModelo Estandarizaci�n\n\t----------------------\n");

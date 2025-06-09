@@ -38,9 +38,9 @@ public class Model implements IModel {
 	}
 
 
-	public Model(int countVar, int countEcu) {
+	public Model(int countVar, int countEcu, String optimization) {
 		
-		this.linearModel = new LinearModel(countVar, countEcu);
+		this.linearModel = new LinearModel(countVar, countEcu, optimization);
 		this.linearModel.setSolucion(0.0);
 		listVarBasic = new ArrayList<Integer>();
 	}	

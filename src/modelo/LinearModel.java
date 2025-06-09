@@ -12,6 +12,8 @@ import java.util.stream.IntStream;
  * 
  */
 public class LinearModel implements ILinearModel {
+	
+	final private String OPTIMIZATION;
 
 	private int countVar;
 	private int countEcu;
@@ -30,8 +32,9 @@ public class LinearModel implements ILinearModel {
 	 */
 	private List<Double> resources;
 
-	public LinearModel(int countVar, int countEcu) {
+	public LinearModel(int countVar, int countEcu, String optimization) {
 		super();
+		this.OPTIMIZATION = optimization;
 		this.countVar = countVar;
 		this.countEcu = countEcu;
 		functionZ = new ArrayList<Double>();
@@ -40,6 +43,11 @@ public class LinearModel implements ILinearModel {
 		resources = new ArrayList<Double>();
 	}
 
+	@Override
+	public String getOptimization() {
+		return this.OPTIMIZATION;
+	}
+	
 	public int getCountVar() {
 		return countVar;
 	}
@@ -92,5 +100,6 @@ public class LinearModel implements ILinearModel {
 	public void setResources(List<Double> resources) {
 		this.resources = resources;
 	}
+
 	
 }

@@ -75,7 +75,7 @@ class ModelTest {
 	 */
 	@Test
 	void testMetodoSimple03() {
-		ILinearModel modelo = new LinearModel(3,3);
+		ILinearModel modelo = new LinearModel(3,3, "MAXIMIZE");
 		
 		Model model = new Model(Examples.ingresoEjemplo03());
 		model = model.standardize();

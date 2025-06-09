@@ -23,7 +23,7 @@ public class ExamplesM {
 	 */
 	public static ILinearModel ingresoEjemplo01M() {
 		
-		ILinearModel modelo = new LinearModel(2,3);
+		ILinearModel modelo = new LinearModel(2,3, "MINIMIZE");
 		
 		modelo.setListZ(new ArrayList<Double>() {{add(4.0);add(1.0);}});
 		List<Double> a = new ArrayList<Double>();a.add(3.0);a.add(1.0);
@@ -50,7 +50,7 @@ public class ExamplesM {
 	 */
 	public static ILinearModel ingresoEjemplo02M() {
 		
-		ILinearModel modelo = new LinearModel(3,3);
+		ILinearModel modelo = new LinearModel(3,3, "MINIMIZE");
 		
 		modelo.setListZ(new ArrayList<Double>() {{add(9.0);add(2.0);add(5.0);}});
 		List<Double> a = new ArrayList<Double>();a.add(4.0);a.add(3.0);a.add(6.0);
@@ -76,7 +76,7 @@ public class ExamplesM {
 	 */
 	public static ILinearModel ingresoEjemplo03M() {
 		
-		ILinearModel modelo = new LinearModel(3,2);
+		ILinearModel modelo = new LinearModel(3,2, "MINIMIZE");
 		
 		modelo.setListZ(new ArrayList<Double>() {{add(163.0);add(120.0);add(220.0);}});
 		List<Double> a = new ArrayList<Double>();a.add(2.0);a.add(1.0);a.add(4.0);
@@ -102,7 +102,7 @@ public class ExamplesM {
 	 */
 	public static ILinearModel ingresoEjemplo05M() {
 		
-		ILinearModel modelo = new LinearModel(2,3);
+		ILinearModel modelo = new LinearModel(2,3, "MINIMIZE");
 		
 		modelo.setListZ(new ArrayList<Double>() {{add(25.0);add(22.0);}});
 		List<Double> a = new ArrayList<Double>();a.add(0.45);a.add(0.35);

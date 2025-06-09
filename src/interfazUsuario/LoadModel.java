@@ -10,6 +10,7 @@ import modelo.Model;
 import modelo.LinearModel;
 import test.Examples;
 import test.ExamplesM;
+import test.ExamplesTwoPhaseMethod;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,7 +40,8 @@ final public class LoadModel {
 //		ingresarModeloPorTeclado();
 //		ingresoModeloEspecifico();
 //		ingresarModeloAutomaticamente();
-		return Examples.ingresoEjemplo03();
+//		return Examples.ingresoEjemplo03();
+		return ExamplesTwoPhaseMethod.ingresoEjemplo05TwoPhaseMethod();
 //		return this.modelo;
 	}
 	
@@ -65,7 +67,7 @@ final public class LoadModel {
 
 	private void ingresoModeloEspecifico() {
 		
-		ILinearModel modelo = new LinearModel(getCountVar(), getCountEcu());
+		ILinearModel modelo = new LinearModel(getCountVar(), getCountEcu(), "MAXIMIZE");
 		
 		modelo.setListZ(new ArrayList<Double>() {{add(5.0);add(4.0);}});
 		List<Double> a = new ArrayList<Double>();a.add(6.0);a.add(4.0);
@@ -129,7 +131,7 @@ final public class LoadModel {
 	
 	private IModel ingresarModeloAutomaticamente() {
 		
-		ILinearModel modelo = new LinearModel(getCountVar(), getCountEcu());
+		ILinearModel modelo = new LinearModel(getCountVar(), getCountEcu(), "MAXIMIZE");
 		
 		modelo.setListZ(arrayIntRandom(countVar));
 		

@@ -29,7 +29,7 @@ public final class Examples {
 	 */
 	public static ILinearModel ingresoEjemplo01() {
 		
-		ILinearModel model = new LinearModel(2,4);
+		ILinearModel model = new LinearModel(2,4, "MAXIMIZE");
 		
 		model.setListZ(new ArrayList<Double>() {{add(5.0);add(4.0);}});
 		List<Double> a = new ArrayList<Double>();a.add(6.0);a.add(4.0);
@@ -61,7 +61,7 @@ public final class Examples {
 	 */
 	public static ILinearModel ingresoEjemplo02() {
 		
-		ILinearModel model = new LinearModel(3,3);
+		ILinearModel model = new LinearModel(3,3, "MAXIMIZE");
 		
 		model.setListZ(new ArrayList<Double>() {{add(2.0);add(5.0);add(9.0);}});
 		List<Double> a = new ArrayList<Double>();a.add(1.0);a.add(6.0);a.add(8.0);
@@ -90,7 +90,7 @@ public final class Examples {
 	 */
 	public static ILinearModel ingresoEjemplo03() {
 		
-		ILinearModel model = new LinearModel(3,3);
+		ILinearModel model = new LinearModel(3,3, "MAXIMIZE");
 		
 		model.setListZ(new ArrayList<Double>() {{add(82.0);add(53.0);add(54.0);}});
 		List<Double> a = new ArrayList<Double>();a.add(36.0);a.add(72.0);a.add(63.0);
@@ -119,7 +119,7 @@ public final class Examples {
 	 */
 	public static ILinearModel ingresoEjemplo04() {
 		
-		ILinearModel model = new LinearModel(3,3);
+		ILinearModel model = new LinearModel(3,3, "MAXIMIZE");
 		
 		model.setListZ(new ArrayList<Double>() {{add(69.0);add(-75.0);add(62.0);}});
 		List<Double> a = new ArrayList<Double>();a.add(45.0);a.add(30.0);a.add(23.0);
@@ -148,7 +148,7 @@ public final class Examples {
 	 */
 	public static ILinearModel ingresoEjemplo05() {
 		
-		ILinearModel model = new LinearModel(3,3);
+		ILinearModel model = new LinearModel(3,3, "MAXIMIZE");
 		
 		model.setListZ(new ArrayList<Double>() {{add(17.0);add(1.0);add(-67.0);}});
 		List<Double> a = new ArrayList<Double>();a.add(9.0);a.add(-18.0);a.add(-75.0);
@@ -176,7 +176,7 @@ public final class Examples {
 	 */
 	public static ILinearModel ingresoEjemplo06() {
 		
-		ILinearModel model = new LinearModel(2,2);
+		ILinearModel model = new LinearModel(2,2, "MAXIMIZE");
 		
 		model.setListZ(new ArrayList<Double>() {{add(-13000.0);add(-47000.0);}});
 		List<Double> a = new ArrayList<Double>();a.add(68000.0);a.add(2000.0);
@@ -203,7 +203,7 @@ public final class Examples {
 	 */
 	public static ILinearModel ingresoEjemplo07() {
 		
-		ILinearModel model = new LinearModel(2,3);
+		ILinearModel model = new LinearModel(2,3, "MAXIMIZE");
 		
 		model.setListZ(new ArrayList<Double>() {{add(1.0);add(3.0);}});
 		List<Double> a = new ArrayList<Double>();a.add(1.0);a.add(1.0);

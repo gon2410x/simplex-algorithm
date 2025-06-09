@@ -45,10 +45,10 @@ public class ModelM implements IModel {
 
 
 
-	public ModelM(int countVar, int countEcu) {
+	public ModelM(int countVar, int countEcu, String optimization) {
 		
 		System.out.println("Metodo M");
-		linearModel = new LinearModel(countVar, countEcu);
+		linearModel = new LinearModel(countVar, countEcu, optimization);
 		linearModel.setSolucion(0.0);
 		listVarBasic = new ArrayList<Integer>();
 	}		

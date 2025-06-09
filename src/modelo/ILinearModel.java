@@ -10,6 +10,8 @@ import java.util.List;
  */
 public interface ILinearModel {
 	
+	String getOptimization();
+	
 	int getCountVar();
 	void setCountVar(int countVar);
 	
