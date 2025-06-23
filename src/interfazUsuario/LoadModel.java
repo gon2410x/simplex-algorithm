@@ -41,7 +41,7 @@ final public class LoadModel {
 //		ingresoModeloEspecifico();
 //		ingresarModeloAutomaticamente();
 //		return Examples.ingresoEjemplo03();
-		return ExamplesTwoPhaseMethod.ingresoEjemplo05TwoPhaseMethod();
+		return ExamplesTwoPhaseMethod.ingresoEjemplo03TwoPhaseMethod();
 //		return this.modelo;
 	}
 	

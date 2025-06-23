@@ -3,6 +3,7 @@
  */
 package main;
 
+import gui.GUI;
 import interfazUsuario.DisplayModelConsole;
 import interfazUsuario.LoadModel;
 import modelo.IModel;
@@ -10,6 +11,8 @@ import modelo.IModel;
 import modelo.Model;
 import modeloM.ModelM;
 import twoPhaseMethod.TwoPhaseMethod;
+
+import javax.swing.*;
 
 /**
  * @author personal
@@ -35,5 +38,12 @@ public class Main {
 		System.out.println("El resultado del metodo simple : "+model.metodoSimple());
 		System.out.println("\n\n\tFin del M�todo Simplex\n");
 		new DisplayModelConsole().showDates(model.getLinearModel());
+
+
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				new GUI().setVisible(true);
+			}
+		});
 	}	
 }
